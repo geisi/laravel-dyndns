@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Geisi\DynDns\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class DynDnsCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-dyndns';
 
     public $description = 'My command';
 

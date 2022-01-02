@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "geisi/laravel-dyndns",
+    "description": "Laravel DynDns helps you to publish your local public IP without using any external DynDns services",
     "keywords": [
-        ":vendor_name",
+        "geisi",
         "laravel",
-        ":package_slug"
+        "laravel-dyndns"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/geisi/laravel-dyndns",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "geisi",
+            "email": "tim@partysturmevents.de",
             "role": "Developer"
         }
     ],
@@ -34,13 +34,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Geisi\\DynDns\\": "src",
+            "Geisi\\DynDns\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Geisi\\DynDns\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -54,10 +54,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Geisi\\DynDns\\DynDnsServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "DynDns": "Geisi\\DynDns\\Facades\\DynDns"
             }
         }
     },
