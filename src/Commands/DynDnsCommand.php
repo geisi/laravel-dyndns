@@ -6,9 +6,9 @@ use Illuminate\Console\Command;
 
 class DynDnsCommand extends Command
 {
-    public $signature = 'laravel-dyndns';
+    public $signature = 'dyndns:run';
 
-    public $description = 'My command';
+    public $description = 'Run dyndns entries sync by public IP';
 
     public function handle(): int
     {
