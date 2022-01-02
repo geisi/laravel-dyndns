@@ -2,9 +2,9 @@
 
 namespace Geisi\DynDns\Tests;
 
+use Geisi\DynDns\DynDnsServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Geisi\DynDns\DynDnsServiceProvider;
 
 class TestCase extends Orchestra
 {

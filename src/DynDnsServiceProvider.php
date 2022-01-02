@@ -2,9 +2,9 @@
 
 namespace Geisi\DynDns;
 
+use Geisi\DynDns\Commands\DynDnsCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Geisi\DynDns\Commands\DynDnsCommand;
 
 class DynDnsServiceProvider extends PackageServiceProvider
 {
