@@ -22,11 +22,16 @@ class CloudflareDynDNS extends DynDnsProvider
 
     protected function updateRecord(string $newIp): bool
     {
-        $result = $this->getDnsApi()->updateRecordDetails($this->configuration['zone_id'], $this->configuration['record_id'],
-            array_merge($this->configuration['record_details'],
+        $result = $this->getDnsApi()->updateRecordDetails(
+            $this->configuration['zone_id'],
+            $this->configuration['record_id'],
+            array_merge(
+                $this->configuration['record_details'],
                 ['name' => $this->domain,
                     'content' => $newIp,
-                ]));
+                ]
+            )
+        );
 
         if ($result->success === true) {
             return true;

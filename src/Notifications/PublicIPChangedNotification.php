@@ -22,7 +22,7 @@ class PublicIPChangedNotification extends Notification
 
     public function toMail($notifiable): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('Your public IP Address changed')
             ->line('The public IP Address of your system "' . config('app.name') . '" changed!')
             ->line('Old IP :' . $this->event->oldIp)
