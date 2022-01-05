@@ -63,6 +63,7 @@ class CloudflareDynDNS extends DynDnsProvider
     private function retrieveZoneId(): string
     {
         dd(app()->make(Zones::class, ['adapter' => $this->adapter])->getZoneID($this->getMainDomain()));
+
         return app()->make(Zones::class, ['adapter' => $this->adapter])->getZoneID($this->getMainDomain());
     }
 
