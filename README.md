@@ -115,19 +115,19 @@ When you want to trigger the resync outside of the console you can use the Geisi
 Geisi\DynDns\Facades\DynDns::handle();
 ```
 
-##Notifications
+## Notifications
 
 When you want to be informed when your public IP address has changed you can set the **notification_email** configuration.
 Please have in mind that you have to add a working mail configuration for sending out emails.
 
-##Events
+## Events
 
 Laravel DynDns triggers a Geisi\DynDns\Events\DynDNSUpdated event everytime your IP address changes. 
 When the sync process fails a Geisi\DynDns\Events\DynDNSUpdateError event is dispatched.
 
 You can listen for those events and implement your own application logic.
 
-##Adding other DNS Services
+## Adding new DNS Services
 
 Technically every single DNS service which can be configured with a TTL by 1 minute can be used as your DynDNS service.
 Today we only support Cloudflare out of the box, but you can easily add another services by extending the **Geisi\DynDns\DynDnsProvider** class. 
