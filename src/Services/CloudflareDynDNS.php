@@ -39,7 +39,7 @@ class CloudflareDynDNS extends DynDnsProvider
             $this->configuration['zone_id'],
             $this->configuration['record_id'],
             array_merge(
-                $this->configuration['record_details'] ?? [],
+                $this->configuration['dns_service']['record_details'] ?? [],
                 [
                     'name' => $this->domain,
                     'content' => $newIp,
