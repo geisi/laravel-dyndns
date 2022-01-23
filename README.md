@@ -1,4 +1,4 @@
-# Laravel DynDns easily replace any external DynDNS Service
+# Laravel DynDns easily replaces any external DynDNS Service
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/geisi/laravel-dyndns.svg?style=flat-square)](https://packagist.org/packages/geisi/laravel-dyndns)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/geisi/laravel-dyndns/run-tests?label=tests)](https://github.com/geisi/laravel-dyndns/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -9,7 +9,9 @@
 
 Laravel DynDNS is a lightweight package to help you to publish your local public IP to DNS records without using any external DynDNS service.
 Typically, this is needed when you want to expose any service from your local network to the internet. 
-Your ISP provider might change your public IP address after some time. This package keeps your DNS records in sync with your public IP address.
+Your ISP provider might change your public IP address after some time. 
+
+This package keeps your DNS records in sync with your public IP address.
 
 ## Installation
 
