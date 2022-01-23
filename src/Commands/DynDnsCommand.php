@@ -14,7 +14,7 @@ class DynDnsCommand extends Command
     public function handle(): int
     {
         DynDns::handle();
-        $this->comment('All done');
+        $this->comment('All domains were synced successfully!');
 
         return self::SUCCESS;
     }

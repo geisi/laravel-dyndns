@@ -17,7 +17,7 @@ class DynDnsServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('laravel-dyndns')
-            ->hasConfigFile()
+            ->hasConfigFile('dyndns')
             ->hasCommand(DynDnsCommand::class);
     }
 
@@ -50,6 +50,6 @@ class DynDnsServiceProvider extends PackageServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/dyndns.php' => config_path('dyndns.php'),
-        ]);
+        ], 'dyndns-config');
     }
 }

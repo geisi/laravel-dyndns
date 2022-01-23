@@ -6,5 +6,7 @@ use function Pest\Laravel\artisan;
 it('calls the handle method', function () {
     DynDns::shouldReceive('handle')->once();
 
-    artisan('dyndns:run')->assertSuccessful();
+    artisan('dyndns:run')
+        ->expectsOutput('All domains were synced successfully!')
+        ->assertSuccessful();
 });
