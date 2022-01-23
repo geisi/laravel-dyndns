@@ -34,6 +34,7 @@ it('handles dyndns errors', function () {
     $event->assertNotDispatched(DynDNSUpdated::class);
     $event->assertDispatched(DynDNSUpdateError::class, function ($args) {
         expect($args->domain) === 'foo.bar.com';
+
         return true;
     });
 });

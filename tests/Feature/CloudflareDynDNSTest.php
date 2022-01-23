@@ -87,6 +87,7 @@ it('dispatches a DynDNSUpdateError event when it fails', function () {
 
     $event->assertDispatched(DynDNSUpdateError::class, function ($args) {
         expect($args->error)->toBe('oh damn...');
+
         return true;
     });
 

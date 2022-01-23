@@ -19,7 +19,7 @@ it('handles domain configurations in batch', function () {
                 'adapter' => HasToBeUpdatedProvider::class,
             ],
             'resolver_service' => DummyIpAddressResolver::class,
-            'notification_email' => ''
+            'notification_email' => '',
         ],
         [
             'domain_name' => 'foobar.de',
@@ -27,7 +27,7 @@ it('handles domain configurations in batch', function () {
                 'adapter' => HasToBeUpdatedProvider::class,
             ],
             'resolver_service' => DummyIpAddressResolver::class,
-            'notification_email' => ''
+            'notification_email' => '',
         ],
         [
             'domain_name' => 'no-update.com',
@@ -35,7 +35,7 @@ it('handles domain configurations in batch', function () {
                 'adapter' => NoUpdateProvider::class,
             ],
             'resolver_service' => DummyIpAddressResolver::class,
-            'notification_email' => ''
+            'notification_email' => '',
         ],
         [
             'domain_name' => 'im-failing.com',
@@ -43,8 +43,8 @@ it('handles domain configurations in batch', function () {
                 'adapter' => FailureProvider::class,
             ],
             'resolver_service' => DummyIpAddressResolver::class,
-            'notification_email' => ''
-        ]
+            'notification_email' => '',
+        ],
     ]);
     DynDns::handle();
 
@@ -52,7 +52,8 @@ it('handles domain configurations in batch', function () {
 
     $event->assertDispatched(DynDNSUpdated::class, function ($args) use (&$updatedDomains) {
         expect($args->domain)->toBeIn($updatedDomains->toArray());
-        $updatedDomains = $updatedDomains->filter(fn($value) => $value !== $args->domain);
+        $updatedDomains = $updatedDomains->filter(fn ($value) => $value !== $args->domain);
+
         return true;
     });
 
@@ -60,6 +61,7 @@ it('handles domain configurations in batch', function () {
 
     $event->assertDispatched(DynDNSUpdateError::class, function ($args) {
         expect($args->domain)->toBe('im-failing.com');
+
         return true;
     });
 });

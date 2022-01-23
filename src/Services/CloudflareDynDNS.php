@@ -101,7 +101,9 @@ class CloudflareDynDNS extends DynDnsProvider
      */
     protected function getRecordContent(): string
     {
-        return (app()->make(DNS::class)->getRecordDetails($this->configuration['zone_id'],
-            $this->configuration['record_id']))->content;
+        return (app()->make(DNS::class)->getRecordDetails(
+            $this->configuration['zone_id'],
+            $this->configuration['record_id']
+        ))->content;
     }
 }

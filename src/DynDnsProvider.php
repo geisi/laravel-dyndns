@@ -35,7 +35,7 @@ abstract class DynDnsProvider
             if ($recordIp != $publicIP) {
                 if ($this->updateRecord($publicIP)) {
                     event($event = new DynDNSUpdated(domain: $this->domain, newIp: $publicIP, oldIp: $recordIp));
-                    if (isset($this->configuration['notification_email']) && !empty($notificationEmail = $this->configuration['notification_email'])) {
+                    if (isset($this->configuration['notification_email']) && ! empty($notificationEmail = $this->configuration['notification_email'])) {
                         Notification::route('mail', $notificationEmail)
                             ->notify(new PublicIPChangedNotification($event));
                     }
@@ -44,8 +44,10 @@ abstract class DynDnsProvider
                 }
             }
         } catch (Exception $exception) {
-            Log::error($this->domain.' DynDNS sync error:'.$exception->getMessage(),
-                [$exception]);
+            Log::error(
+                $this->domain.' DynDNS sync error:'.$exception->getMessage(),
+                [$exception]
+            );
             event(new DynDNSUpdateError($this->domain, $exception->getMessage()));
         }
     }
