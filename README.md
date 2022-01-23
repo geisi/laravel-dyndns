@@ -121,7 +121,7 @@ Geisi\DynDns\Facades\DynDns::handle();
 
 ## Notifications
 
-When you want to be informed when your public IP address has changed you can set the **notification_email** configuration.
+When you want to be informed when your public IP address has changed you can set the **notification_email** configuration per domain.
 Please have in mind that you have to add a working mail configuration for sending out emails.
 
 ## Events
