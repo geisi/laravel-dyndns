@@ -2,6 +2,7 @@
 
 namespace Geisi\DynDns\Commands;
 
+use Geisi\DynDns\Facades\DynDns;
 use Illuminate\Console\Command;
 
 class DynDnsCommand extends Command
@@ -12,6 +13,7 @@ class DynDnsCommand extends Command
 
     public function handle(): int
     {
+        DynDns::handle();
         $this->comment('All done');
 
         return self::SUCCESS;

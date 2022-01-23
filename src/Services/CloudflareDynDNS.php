@@ -2,32 +2,46 @@
 
 namespace Geisi\DynDns\Services;
 
-use Cloudflare\API\Adapter\Adapter;
-use Cloudflare\API\Adapter\Guzzle;
-use Cloudflare\API\Auth\APIToken;
 use Cloudflare\API\Endpoints\DNS;
+use Cloudflare\API\Endpoints\EndpointException;
 use Cloudflare\API\Endpoints\Zones;
 use Geisi\DynDns\Contracts\DiscoversIpAddress;
 use Geisi\DynDns\DynDnsProvider;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
+/**
+ *
+ */
 class CloudflareDynDNS extends DynDnsProvider
 {
-    private Adapter $adapter;
-
-    public function __construct(public string $domain, public DiscoversIpAddress $ipAddress, public array $configuration)
-    {
-        parent::__construct($this->domain, $this->ipAddress, $this->configuration);
-        $this->adapter = new Guzzle(new APIToken($this->configuration['api_token']));
+    /**
+     * @param  string  $domain
+     * @param  DiscoversIpAddress  $ipAddressResolver
+     * @param  array  $configuration
+     */
+    public function __construct(
+        public string $domain,
+        public DiscoversIpAddress $ipAddressResolver,
+        public array $configuration
+    ) {
+        parent::__construct($this->domain, $this->ipAddressResolver, $this->configuration);
     }
 
+    /**
+     * Updates the DNS record with the new IP address
+     * @param  string  $newIp
+     * @return bool
+     * @throws BindingResolutionException
+     */
     protected function updateRecord(string $newIp): bool
     {
-        $result = $this->getDnsApi()->updateRecordDetails(
+        $result = app()->make(DNS::class)->updateRecordDetails(
             $this->configuration['zone_id'],
             $this->configuration['record_id'],
             array_merge(
-                $this->configuration['record_details'],
-                ['name' => $this->domain,
+                $this->configuration['record_details'] ?? [],
+                [
+                    'name' => $this->domain,
                     'content' => $newIp,
                 ]
             )
@@ -37,43 +51,57 @@ class CloudflareDynDNS extends DynDnsProvider
             return true;
         }
 
-        $this->errors = (string)$result;
+        $this->errors = (string) $result;
 
         return false;
     }
 
-    private function getDnsApi(): DNS
-    {
-        return new DNS($this->adapter);
-    }
-
+    /**
+     * Gets the records IP address
+     * @return string
+     */
     protected function getRecordIp(): string
     {
         if (empty($this->configuration['zone_id'])) {
-            $this->configuration['zone_id'] = $this->retrieveZoneId();
+            $this->configuration['zone_id'] = $this->getZoneID();
         }
 
         if (empty($this->configuration['record_id'])) {
-            $this->configuration['record_id'] = $this->getRecordId();
+            $this->configuration['record_id'] = $this->getRecordID();
         }
 
-        return ($this->getDnsApi()->getRecordDetails($this->configuration['zone_id'], $this->configuration['record_id']))->content;
+        return $this->getRecordContent();
     }
 
-    private function retrieveZoneId(): string
-    {
-        dd(app()->make(Zones::class, ['adapter' => $this->adapter])->getZoneID($this->getMainDomain()));
-        return app()->make(Zones::class, ['adapter' => $this->adapter])->getZoneID($this->getMainDomain());
-    }
-
-    /*
-     * Updates the IP storage with the new value
-     * @param string $newIp
-     * @return bool
+    /**
+     * get the domains ZoneID
+     * @return string
+     * @throws EndpointException
+     * @throws BindingResolutionException
      */
-
-    private function getRecordId(): string
+    protected function getZoneID(): string
     {
-        return $this->getDnsApi()->getRecordID($this->configuration['zone_id'], "A", $this->domain);
+        return app()->make(Zones::class)->getZoneID($this->getMainDomain());
+    }
+
+    /**
+     * Get the record ID from the Zone
+     * @return string
+     * @throws BindingResolutionException
+     */
+    protected function getRecordID(): string
+    {
+        return app()->make(DNS::class)->getRecordID($this->configuration['zone_id'], "A", $this->domain);
+    }
+
+    /**
+     * Get the record content
+     * @return string
+     * @throws BindingResolutionException
+     */
+    protected function getRecordContent(): string
+    {
+        return (app()->make(DNS::class)->getRecordDetails($this->configuration['zone_id'],
+            $this->configuration['record_id']))->content;
     }
 }

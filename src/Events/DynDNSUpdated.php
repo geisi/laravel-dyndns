@@ -12,7 +12,7 @@ class DynDNSUpdated
     use InteractsWithSockets;
     use SerializesModels;
 
-    public function __construct(public string $newIp, public string $oldIp)
+    public function __construct(public string $domain, public string $newIp, public string $oldIp)
     {
     }
 }
