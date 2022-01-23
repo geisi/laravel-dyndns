@@ -126,8 +126,8 @@ Please have in mind that you have to add a working mail configuration for sendin
 
 ## Events
 
-Laravel DynDns triggers a Geisi\DynDns\Events\DynDNSUpdated event everytime your IP address changes. 
-When the sync process fails a Geisi\DynDns\Events\DynDNSUpdateError event is dispatched.
+Laravel DynDns triggers a ```Geisi\DynDns\Events\DynDNSUpdated``` event everytime your IP address changes. 
+When the sync process fails a ```Geisi\DynDns\Events\DynDNSUpdateError``` event is dispatched.
 
 You can listen for those events and implement your own application logic.
 
