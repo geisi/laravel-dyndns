@@ -2,15 +2,16 @@
 
 namespace Geisi\DynDns\Facades;
 
+use Geisi\DynDns\DynDnsService;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Geisi\DynDns\DynDns
+ * @see \Geisi\DynDns\DynDnsService
  */
 class DynDns extends Facade
 {
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
-        return 'laravel-dyndns';
+        return DynDnsService::class;
     }
 }

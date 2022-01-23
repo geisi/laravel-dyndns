@@ -5,16 +5,20 @@ namespace Geisi\DynDns;
 use Exception;
 use Geisi\DynDns\Contracts\DiscoversIpAddress;
 use Geisi\DynDns\Events\DynDNSUpdated;
-use Geisi\DynDns\Events\UpdateDnyDNSIPError;
+use Geisi\DynDns\Events\DynDNSUpdateError;
 use Geisi\DynDns\Notifications\PublicIPChangedNotification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 abstract class DynDnsProvider
 {
     protected string $errors = '';
 
-    public function __construct(public string $domain, public DiscoversIpAddress $ipAddress, public array $configuration)
-    {
+    public function __construct(
+        public string $domain,
+        public DiscoversIpAddress $ipAddressResolver,
+        public array $configuration
+    ) {
     }
 
     /**
@@ -24,19 +28,28 @@ abstract class DynDnsProvider
      */
     final public function handle(): void
     {
-        $recordIp = $this->getRecordIp();
-        $publicIP = $this->ipAddress->getIp();
-        if ($recordIp != $publicIP) {
-            if ($this->updateRecord($publicIP)) {
-                event($event = new DynDNSUpdated(newIp: $publicIP, oldIp: $recordIp));
-                if (! empty(config('dyndns.notification_email'))) {
-                    Notification::route('mail', 'tim@partysturmevents.de')->notify(new PublicIPChangedNotification($event));
+        try {
+            $recordIp = $this->getRecordIp();
+            $publicIP = $this->ipAddressResolver->getIp();
+
+            if ($recordIp != $publicIP) {
+                if ($this->updateRecord($publicIP)) {
+                    event($event = new DynDNSUpdated(domain: $this->domain, newIp: $publicIP, oldIp: $recordIp));
+                    if (isset($this->configuration['notification_email']) && ! empty($notificationEmail = $this->configuration['notification_email'])) {
+                        Notification::route('mail', $notificationEmail)
+                            ->notify(new PublicIPChangedNotification($event));
+                    }
+                } else {
+                    event(new DynDNSUpdateError($this->domain, $this->errors));
                 }
-            } else {
-                event($event = new UpdateDnyDNSIPError(error: $this->errors));
             }
+        } catch (Exception $exception) {
+            Log::error(
+                $this->domain.' DynDNS sync error:'.$exception->getMessage(),
+                [$exception]
+            );
+            event(new DynDNSUpdateError($this->domain, $exception->getMessage()));
         }
-        dump(true);
     }
 
     /*
@@ -45,8 +58,6 @@ abstract class DynDnsProvider
     protected function getRecordIp(): string
     {
         throw new Exception('getRecordIp method has to be implemented!');
-
-        return "";
     }
 
     /*
@@ -57,18 +68,17 @@ abstract class DynDnsProvider
     protected function updateRecord(string $newIp): bool
     {
         throw new Exception('updateRecord method has to be implemented!');
-
-        return true;
     }
 
     /**
      * returns the main domain from the domain attribute
      * example: domain: test.foobar.com returns: foobar.com
+     * @param  string|null  $domain
      * @return string The main domain
      */
-    protected function getMainDomain(): string
+    protected function getMainDomain(?string $domain = null): string
     {
-        $domain = strtolower(trim($this->domain));
+        $domain = $domain ?? strtolower(trim($this->domain));
         $count = substr_count($domain, '.');
         if ($count === 2) {
             if (strlen(explode('.', $domain)[1]) > 3) {

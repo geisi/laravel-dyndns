@@ -2,6 +2,7 @@
 
 namespace Geisi\DynDns\Commands;
 
+use Geisi\DynDns\Facades\DynDns;
 use Illuminate\Console\Command;
 
 class DynDnsCommand extends Command
@@ -12,7 +13,8 @@ class DynDnsCommand extends Command
 
     public function handle(): int
     {
-        $this->comment('All done');
+        DynDns::handle();
+        $this->comment('All domains were synced successfully!');
 
         return self::SUCCESS;
     }
