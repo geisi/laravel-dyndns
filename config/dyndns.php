@@ -36,11 +36,6 @@ return [
                     'proxied' => false,
                     'ttl' => 1
                 ],
-
-                /*
-                 * The Cloudflare API token.
-                 */
-                'api_token' => env('CLOUDFLARE_TOKEN', '')
             ],
             /*
              * The public IP Address Resolver Service. By default, we are using the opendns.com resolver to query the current public IP address.
@@ -54,5 +49,9 @@ return [
              */
             'notification_email' => env('DYNDNS_NOTIFICATION_EMAIL', '')
         ]
-    ]
+    ],
+    /*
+    * The Cloudflare API token.
+    */
+    'cloudflare_api_token' => env('CLOUDFLARE_TOKEN', '')
 ];

@@ -8,8 +8,11 @@ use Cloudflare\API\Auth\APIToken;
 use Cloudflare\API\Auth\Auth;
 use Cloudflare\API\Endpoints\DNS;
 use Geisi\DynDns\Commands\DynDnsCommand;
+use Geisi\DynDns\Events\DynDNSUpdateError;
+use Illuminate\Support\Facades\Event;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class DynDnsServiceProvider extends PackageServiceProvider
 {
@@ -21,10 +24,21 @@ class DynDnsServiceProvider extends PackageServiceProvider
             ->hasCommand(DynDnsCommand::class);
     }
 
+    public function register()
+    {
+        if ($this->app->runningInConsole()) {
+            Event::listen(DynDNSUpdateError::class, function (DynDNSUpdateError $event) {
+                $output = new ConsoleOutput();
+                $output->writeln("<error>Error updating domain {$event->domain}</error>");
+                $output->writeln($event->error);
+            });
+        }
+    }
+
     public function boot(): void
     {
         $this->app->bind(Auth::class, function () {
-            return new APIToken(config('dyndns.domains.dns_service.api_token'));
+            return new APIToken(config('dyndns.cloudflare_api_token'));
         });
 
         $this->app->bind(Adapter::class, function ($app) {
